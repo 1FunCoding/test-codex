@@ -1,0 +1,10 @@
+{
+  "name": "stockscope-ai",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Static stock analysis dashboard with real financial data and an AI chatbot.",
+  "scripts": {
+    "start": "python3 -m http.server 4173",
+    "check": "node --check app.js"
+  }
+}
