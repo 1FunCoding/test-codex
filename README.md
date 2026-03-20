@@ -1,10 +1,10 @@
 # StockScope AI
 
-A single-page stock research dashboard that pulls **real stock market and accounting data** from Alpha Vantage and offers an **AI chatbot** for follow-up analysis using an OpenAI-compatible API.
+A stock research dashboard with a Python backend using **yfinance** for market/fundamental data and a frontend AI chatbot backed by the native Gemini API.
 
 ## Features
 
-- Search by ticker to load live quote + company overview data.
+- Search by ticker or company name to find and load stocks.
 - Pulls fundamental statement data such as revenue, net income, assets, liabilities, and equity.
 - Computes useful accounting ratios:
   - P/E ratio
@@ -18,45 +18,46 @@ A single-page stock research dashboard that pulls **real stock market and accoun
   - Debt-to-equity
   - Cash ratio
 - Includes an AI chatbot panel that uses the loaded stock dataset as context for answering stock-analysis questions.
-- Settings dialog lets you save your Alpha Vantage key and AI API configuration in browser local storage.
+- Includes beginner-friendly good-signal/risk-signal cards.
+- Keeps the Gemini API key on the backend instead of in the browser.
 
 ## Running locally
 
-Because this is a static site, you can serve it with any local web server.
-
-### Option 1: Python
+## 1) Create a virtual environment (recommended)
 
 ```bash
-python3 -m http.server 4173
+cd /Users/wangqi/test-codex
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip setuptools wheel
+pip install -r requirements.txt
+```
+
+## 2) Start the app (backend + frontend on one port)
+
+```bash
+export GEMINI_API_KEY="your-key-here"
+npm start
 ```
 
 Then open `http://localhost:4173`.
-
-### Option 2: VS Code Live Server
-
-Open the repository in VS Code and run Live Server on `index.html`.
 
 ## API setup
 
 ### Stock data
 
-1. Get an Alpha Vantage API key: https://www.alphavantage.co/support/#api-key
-2. Open **API settings** in the app.
-3. Paste the API key.
-
-> The app defaults to Alpha Vantage's `demo` key, which is rate-limited and only reliably supports sample symbols.
+- No Alpha Vantage key is needed now.
+- Stock lookup/search is provided by the backend (`/api/search` and `/api/stock`) using yfinance.
 
 ### AI chatbot
 
-1. Use an OpenAI-compatible API endpoint.
-2. In **API settings**, set:
-   - AI base URL
-   - AI API key
-   - AI model name
-3. Ask a question after loading a stock.
+- Set `GEMINI_API_KEY` before starting the backend.
+- Optional: set `GEMINI_MODEL` if you want to override the default `gemini-2.5-flash`.
+- The frontend sends chat requests only to `/api/chat`; the browser never sends the Gemini key to Google directly.
+- The backend prefers the official Python Gemini SDK (`google-genai`) and falls back to the native Gemini REST API if the SDK is unavailable.
 
 ## Notes
 
 - This project is for educational use and is **not investment advice**.
-- Statement availability depends on the coverage returned by Alpha Vantage.
-- Some tickers may hit API rate limits when using the demo key.
+- yfinance coverage varies by symbol/market and some fields can be missing.
+- If running from Anaconda and you see dependency conflicts, prefer using `.venv` for isolation.

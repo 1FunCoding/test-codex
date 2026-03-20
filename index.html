@@ -24,7 +24,6 @@
             AI assistant to explain what the numbers mean.
           </p>
         </div>
-        <button id="open-settings" class="ghost-button" type="button">API settings</button>
       </header>
 
       <main class="layout">
@@ -32,17 +31,18 @@
           <div class="section-heading">
             <div>
               <h2>Analyze a stock</h2>
-              <p>Uses Alpha Vantage for quotes and financial statements.</p>
+              <p>Uses a yfinance backend for quotes and financial statements.</p>
             </div>
           </div>
 
           <form id="stock-form" class="search-form">
             <label>
-              <span>Ticker symbol</span>
-              <input id="ticker-input" name="ticker" placeholder="AAPL" maxlength="10" required />
+              <span>Ticker or company name</span>
+              <input id="ticker-input" name="ticker" placeholder="AAPL or Apple" maxlength="80" required autocomplete="off" />
             </label>
             <button type="submit">Load analysis</button>
           </form>
+          <div id="symbol-results" class="symbol-results" aria-live="polite"></div>
 
           <div class="quick-picks">
             <button class="chip" data-symbol="AAPL" type="button">AAPL</button>
@@ -70,6 +70,21 @@
             <article class="stat-card"><span>P/E ratio</span><strong>--</strong></article>
             <article class="stat-card"><span>EPS</span><strong>--</strong></article>
             <article class="stat-card"><span>Profit margin</span><strong>--</strong></article>
+          </div>
+          <div class="price-chart-card">
+            <div class="chart-header">
+              <h3>Price trend</h3>
+              <div class="chart-controls">
+                <div class="chart-range-switch" role="group" aria-label="Chart range">
+                  <button class="chart-range-btn active" type="button" data-range="1M">1M</button>
+                  <button class="chart-range-btn" type="button" data-range="3M">3M</button>
+                  <button class="chart-range-btn" type="button" data-range="6M">6M</button>
+                  <button class="chart-range-btn" type="button" data-range="1Y">1Y</button>
+                </div>
+                <span id="chart-range-label">Awaiting data</span>
+              </div>
+            </div>
+            <div id="price-chart" class="price-chart"></div>
           </div>
         </section>
 
@@ -113,12 +128,35 @@
           </div>
         </section>
 
+        <section class="panel signals-panel">
+          <div class="section-heading">
+            <div>
+              <h2>Investor signal board</h2>
+              <p>Quick read for beginner investors: strengths vs watch-outs.</p>
+            </div>
+          </div>
+          <div class="signal-summary" id="signal-summary">
+            <strong id="signal-score">Score: --/100</strong>
+            <span id="signal-verdict">Load a stock to see a beginner-friendly verdict.</span>
+          </div>
+          <div class="signal-columns">
+            <article class="signal-card good">
+              <h3>Good signals</h3>
+              <ul id="good-signals"></ul>
+            </article>
+            <article class="signal-card bad">
+              <h3>Risk signals</h3>
+              <ul id="bad-signals"></ul>
+            </article>
+          </div>
+        </section>
+
         <section class="panel chatbot-panel">
           <div class="section-heading">
             <div>
               <h2>Stock analysis chatbot</h2>
               <p>
-                Connect your OpenAI-compatible API key to ask follow-up questions grounded in the loaded stock data.
+                Ask follow-up questions grounded in the loaded stock data. Gemini runs on the backend so the API key stays off the website.
               </p>
             </div>
           </div>
@@ -141,43 +179,6 @@
         </section>
       </main>
     </div>
-
-    <dialog id="settings-dialog">
-      <form method="dialog" class="settings-card">
-        <div class="section-heading">
-          <div>
-            <h2>API settings</h2>
-            <p>Saved in your browser only.</p>
-          </div>
-        </div>
-
-        <label>
-          <span>Alpha Vantage API key</span>
-          <input id="stock-api-key" placeholder="Enter Alpha Vantage key" />
-        </label>
-
-        <label>
-          <span>AI API base URL</span>
-          <input id="ai-base-url" placeholder="https://api.openai.com/v1" />
-        </label>
-
-        <label>
-          <span>AI API key</span>
-          <input id="ai-api-key" type="password" placeholder="Enter AI API key" />
-        </label>
-
-        <label>
-          <span>AI model</span>
-          <input id="ai-model" placeholder="gpt-4o-mini" />
-        </label>
-
-        <div class="dialog-actions">
-          <button type="button" id="save-settings">Save settings</button>
-          <button type="submit" class="ghost-button">Close</button>
-        </div>
-      </form>
-    </dialog>
-
     <script src="app.js" type="module"></script>
   </body>
 </html>
