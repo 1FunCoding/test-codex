@@ -1,1 +1,1 @@
-web: gunicorn --workers=2 --bind=0.0.0.0:$PORT --timeout=120 "backend.server:create_app()"
+web: gunicorn --workers=2 --bind=0.0.0.0:$PORT --timeout=120 wsgi:app
